@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>no.responseweb.imagearchive</groupId>
+		<artifactId>file-service-bom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>file-store-fetcher-service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>file-store-fetcher-service</name>
+	<description>Response File Store Fetcher Service</description>
+
+</project>
