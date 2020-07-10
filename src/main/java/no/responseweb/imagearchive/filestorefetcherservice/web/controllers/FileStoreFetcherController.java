@@ -8,11 +8,13 @@ import no.responseweb.imagearchive.model.FilePathDto;
 import no.responseweb.imagearchive.model.FileStoreDto;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +34,11 @@ public class FileStoreFetcherController {
     public Object getOriginalFile(@PathVariable UUID fileItemId) throws IOException {
 
         FileItemDto fileItemDto = fileInfoService.getFileItem(fileItemId);
+        if (fileItemDto==null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "entity not found"
+            );
+        }
         FilePathDto filePathDto = fileInfoService.getFilePath(fileItemDto.getFileStorePathId());
         FileStoreDto fileStoreDto = fileInfoService.getFileStore(filePathDto.getFileStoreId());
 
@@ -41,7 +48,7 @@ public class FileStoreFetcherController {
 
         String detectedMimeType = Files.probeContentType(path);
         MediaType detectedMediaType = MediaType.parseMediaType(detectedMimeType);
-        log.info("Detected Mime Type: {}. Detected Media Type: {}", detectedMimeType, detectedMediaType);
+        log.info("File id: {}. Detected Mime Type: {}. Detected Media Type: {}", fileItemDto.getId(), detectedMimeType, detectedMediaType);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION,  "inline; filename=\"" +fileItemDto.getFilename()+ "\"");
