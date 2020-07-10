@@ -64,4 +64,24 @@ public class FileStoreFetcherController {
                 .body(resource);
     }
 
+    @GetMapping("api/v1/fetchFile/{fileItemId}/mimeType")
+    public String getMediaType(@PathVariable UUID fileItemId) throws IOException {
+        FileItemDto fileItemDto = fileInfoService.getFileItem(fileItemId);
+        if (fileItemDto==null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "entity not found"
+            );
+        }
+        FilePathDto filePathDto = fileInfoService.getFilePath(fileItemDto.getFileStorePathId());
+        FileStoreDto fileStoreDto = fileInfoService.getFileStore(filePathDto.getFileStoreId());
+
+        String s = fileStoreDto.getLocalBaseUri() + File.separator + filePathDto.getRelativePath() + File.separator + fileItemDto.getFilename();
+        Path path = Paths.get(s);
+
+        String detectedMimeType = Files.probeContentType(path);
+        log.info("File id: {}. Detected Mime Type: {}", fileItemDto.getId(), detectedMimeType);
+
+        return detectedMimeType;
+    }
+
 }
